@@ -1,6 +1,6 @@
 
   
-# Установка
+# Download
 
 1. Create new directory and copy path
 2. Open cmd
