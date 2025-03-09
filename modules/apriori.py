@@ -79,7 +79,7 @@ async def start_apriori(account, action):
             tx_hash = await apriori.stake_mon()
             
             if tx_hash:
-                result_text = f'{apriori.client.address} {apriori.private_key} APRIORI_STAKE {tx_hash.hex()}'
+                result_text = f'{apriori.client.address} {apriori.private_key} APRIORI_STAKE {tx_hash.hex()}\n'
                 write_result(result_text)
 
             await apriori.client.session.close()
@@ -89,7 +89,7 @@ async def start_apriori(account, action):
             tx_hash = await apriori.unstake_mon()
 
             if tx_hash:
-                result_text = f'{apriori.client.address} {apriori.private_key} APRIORI_UNSTAKE {tx_hash.hex()}'
+                result_text = f'{apriori.client.address} {apriori.private_key} APRIORI_UNSTAKE {tx_hash.hex()}\n'
                 write_result(result_text)
 
             await apriori.client.session.close()

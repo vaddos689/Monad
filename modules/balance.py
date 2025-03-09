@@ -28,7 +28,7 @@ async def start_checker(account):
         
         mon_eth_balance = await balance.get_balance()
         
-        text = f'{balance.client.address} {balance.client.private_key} {mon_eth_balance}'
+        text = f'{balance.client.address} {balance.client.private_key} {mon_eth_balance}\n'
         write_balance_result(text)
 
         await balance.client.session.close()

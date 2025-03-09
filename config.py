@@ -88,3 +88,32 @@ AICRAFT_DATA = {
    "Pearl":"67a9b77f69a74dc24fd0bd3b",
    "Oud":"67a9b786a0a41c23db2a432b"
 }
+
+MAGIC_EDEN_ABI = [
+    {
+        "constant": False,
+        "inputs": [
+            {
+                "name": "to",
+                "type": "address"
+            },
+            {
+                "name": "tokenId",
+                "type": "uint256"
+            },
+            {
+                "name": "amount",
+                "type": "uint256"
+            },
+            {
+                "name": "data",
+                "type": "bytes"
+            }
+        ],
+        "name": "mintPublic",
+        "outputs": [],
+        "payable": False,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+]
