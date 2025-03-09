@@ -21,6 +21,7 @@ async def start(module: str):
     if module == 'balance_checker':
         logger.info('Start Balance checker module')
         await start_balance_checker(accounts)
+        logger.info("Balance checker result in: balance_checker_result.txt")
     
 
 if __name__ == '__main__':
