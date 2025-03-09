@@ -44,6 +44,6 @@ python main.py
 # Ready modules
 1) Aicraft (need proxy)
 2) Apriori (stake)
+3) Balance checker
 # Modules in process
-1) Balance checker
-2) Apriori unstake
+1) Apriori unstake
