@@ -20,7 +20,7 @@ class AIcraft:
         self.id = account['id']
         self.private_key = account['private_key']
         self.proxy = account['proxy']
-
+        # With Proxy for site requests (witout proxy for blockchain tx)
         self.client = Client(self.id, self.private_key, self.proxy)
         self.aicraft_contract = self.client.get_contract(AICRAFT_CONTRACT, AICRAFT_ABI)
         self.account_eth = Account().from_key(self.private_key)

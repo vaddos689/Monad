@@ -15,8 +15,9 @@ class Apriori:
         self.id = account['id']
         self.private_key = account['private_key']
         self.proxy = account['proxy']
-        # Без прокси, только транзы
+        # Without Proxy (integrate only with blockchain)
         self.client = Client(self.id, self.private_key)
+        
         self.apriori_contract = self.client.get_contract(APRIORI_CONTRACT, APRIORI_ABI)
 
     async def stake_mon(self):

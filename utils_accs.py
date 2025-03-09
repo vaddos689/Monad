@@ -22,3 +22,7 @@ def get_accounts():
 def write_result(text):
     with open('result.txt', 'a') as file:
         file.write(text)
+
+def write_balance_result(text):
+    with open('balance_checker_result.txt', 'a') as file:
+        file.write(text)
