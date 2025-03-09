@@ -2,9 +2,10 @@ import asyncio
 import random
 from loguru import logger
 from utils_accs import write_result
-from general_settings import semaphore, APRIORI_STAKE_RANGE
+from general_settings import semaphore, APRIORI_STAKE_RANGE, APRIORI_UNSTAKE_ALL, APRIORI_UNSTAKE_PRECENT
 from config import APRIORI_ABI, APRIORI_CONTRACT
 from modules.client import Client
+from decimal import Decimal, ROUND_FLOOR
 
 def get_random_float_from_range(range_: list):
     return round(random.uniform(range_[0], range_[1]), 4)
@@ -37,23 +38,66 @@ class Apriori:
             self.client.address
         ).build_transaction(await self.client.prepare_transaction(value=random_stake_amount_wei))
 
-        return await self.client.send_transaction(transaction)
+        return await self.client.send_transaction(transaction, need_hash=True)
+
+    def round_to_min_step(self, value, min_value=0.0001):
+        d = Decimal(str(value)).quantize(Decimal('0.0001'), rounding=ROUND_FLOOR)
+        return max(d, Decimal(str(min_value)))
+
+    async def unstake_mon(self):
+        aprMON_balance_in_wei, aprMON_balance, _ = await self.client.get_token_balance('aprMON')
+        
+        logger.info(f'[{self.id}] [{self.client.address}] aprMON balance: {aprMON_balance} MON')
+        
+        if APRIORI_UNSTAKE_ALL:
+            unstake_amount_mon = aprMON_balance
+            rounded_amount_mon = self.round_to_min_step(unstake_amount_mon)
+            shares = int(rounded_amount_mon * 10**18)
+            logger.info(f'[{self.id}] [{self.client.address}] unstake all {self.client.w3.from_wei(shares, 'ether')} aprMON')
+        else:
+            unstake_amount_mon = (APRIORI_UNSTAKE_PRECENT / 100) * aprMON_balance
+            rounded_amount_mon = self.round_to_min_step(unstake_amount_mon)
+            shares = int(rounded_amount_mon * 10**18)
+            logger.info(f'[{self.id}] [{self.client.address}] unstake {APRIORI_UNSTAKE_PRECENT}% aprMON == {self.client.w3.from_wei(shares, 'ether')}')        
+        
+        transaction = await self.apriori_contract.functions.requestRedeem(
+            shares,
+            self.client.address,
+            self.client.address
+        ).build_transaction(await self.client.prepare_transaction())
+
+        return await self.client.send_transaction(transaction, need_hash=True)
 
 
-async def start_apriori(account):
+async def start_apriori(account, action):
     async with semaphore:
+
         apriori = Apriori(account)
-        logger.info(f'Start [{apriori.id}] account')
-        tx_hash = await apriori.stake_mon()
-        if tx_hash:
-            result_text = f'{apriori.client.address} {apriori.proxy} APRIORI_STAKE {tx_hash.hex()}'
-            write_result(result_text)
-        await apriori.client.session.close()
+
+        if action == 'stake':
+            logger.info(f'Start [{apriori.id}] account (stake)')
+            tx_hash = await apriori.stake_mon()
+            
+            if tx_hash:
+                result_text = f'{apriori.client.address} {apriori.private_key} APRIORI_STAKE {tx_hash.hex()}'
+                write_result(result_text)
+
+            await apriori.client.session.close()
+
+        if action == 'unstake':
+            logger.info(f'Start [{apriori.id}] account (unstake)')
+            tx_hash = await apriori.unstake_mon()
+
+            if tx_hash:
+                result_text = f'{apriori.client.address} {apriori.private_key} APRIORI_UNSTAKE {tx_hash.hex()}'
+                write_result(result_text)
+
+            await apriori.client.session.close()
 
 
-async def start_accounts_for_apriori(accounts):
+async def start_accounts_for_apriori(accounts, action):
     task = []
     for account in accounts:
-        task.append(asyncio.create_task(start_apriori(account)))
+        task.append(asyncio.create_task(start_apriori(account, action)))
 
     await asyncio.gather(*task)

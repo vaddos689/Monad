@@ -43,7 +43,7 @@ python main.py
 ```
 # Ready modules
 1) Aicraft (need proxy)
-2) Apriori (stake)
+2) Apriori
 3) Balance checker
 # Modules in process
-1) Apriori unstake
+4) ME mint
