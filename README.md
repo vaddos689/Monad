@@ -46,4 +46,4 @@ python main.py
 2) Apriori
 3) Balance checker
 # Modules in process
-4) ME mint
+1) Deploy contract
