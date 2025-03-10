@@ -45,5 +45,6 @@ python main.py
 1) Aicraft (need proxy)
 2) Apriori
 3) Balance checker
+4) Owlto
 # Modules in process
-1) Deploy contract
+1) ?

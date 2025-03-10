@@ -5,7 +5,7 @@ from utils_accs import get_accounts
 from modules.apriori import start_accounts_for_apriori
 from modules.aicraft import start_accounts_for_aicraft
 from modules.balance import start_balance_checker
-from modules.magic_eden import start_magic_eden
+from modules.owlto import start_accounts_for_owlto
 
 async def start(module: str):
     accounts = get_accounts()
@@ -27,18 +27,16 @@ async def start(module: str):
         logger.info('Start Balance checker module')
         await start_balance_checker(accounts)
         logger.info("Balance checker result in: balance_checker_result.txt")
-    
-    if module == 'magic_eden':
-        logger.info('Start MagicEden module')
-        await start_magic_eden(accounts)
-        logger.info("MagicEden result in: balance_checker_result.txt")
-    
+
+    if module == 'owlto':
+        logger.info('Start Owlto module')
+        await start_accounts_for_owlto(accounts)
 
 if __name__ == '__main__':
     action = int(input('\n1. Apriori Stake'
                         '\n2. AIcraft vote'
                         '\n3. Balance checker'
-                        '\n4. Magic Eden'
+                        '\n4. Owlto'
                         '\nSelect module: '))
     if action == 1:
         apriori_action = int(input('\n1. Stake MON'
@@ -57,4 +55,4 @@ if __name__ == '__main__':
         asyncio.run(start('balance_checker'))
     
     if action == 4:
-        asyncio.run(start('magic_eden'))
+        asyncio.run(start('owlto'))
