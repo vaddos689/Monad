@@ -46,5 +46,6 @@ python main.py
 2) Apriori
 3) Balance checker
 4) Owlto
+5) Kintsu
 # Modules in process
 1) ?

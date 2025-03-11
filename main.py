@@ -6,6 +6,7 @@ from modules.apriori import start_accounts_for_apriori
 from modules.aicraft import start_accounts_for_aicraft
 from modules.balance import start_balance_checker
 from modules.owlto import start_accounts_for_owlto
+from modules.kintsu import start_accounts_for_kintsu
 
 async def start(module: str):
     accounts = get_accounts()
@@ -32,11 +33,20 @@ async def start(module: str):
         logger.info('Start Owlto module')
         await start_accounts_for_owlto(accounts)
 
+    if module == 'kintsu_stake':
+        logger.info('Start Kintsu module')
+        await start_accounts_for_kintsu(accounts, 'stake')
+    
+    if module == 'kintsu_unstake':
+        logger.info('Start Kintsu module')
+        await start_accounts_for_kintsu(accounts, 'unstake')
+
 if __name__ == '__main__':
     action = int(input('\n1. Apriori Stake'
                         '\n2. AIcraft vote'
                         '\n3. Balance checker'
                         '\n4. Owlto'
+                        '\n5. Kintsu'
                         '\nSelect module: '))
     if action == 1:
         apriori_action = int(input('\n1. Stake MON'
@@ -56,3 +66,13 @@ if __name__ == '__main__':
     
     if action == 4:
         asyncio.run(start('owlto'))
+    
+    if action == 5:
+        kintsu_action = int(input('\n1. Stake MON'
+                                   '\n2. Unstake MON'
+                                   '\nSelect Kintsu action: '))
+        if kintsu_action == 1:
+            asyncio.run(start('kintsu_stake'))
+
+        if kintsu_action == 2:
+            asyncio.run(start('kintsu_unstake'))
