@@ -21,6 +21,12 @@ class Apriori:
         
         self.apriori_contract = self.client.get_contract(APRIORI_CONTRACT, APRIORI_ABI)
 
+    async def get_aprmon_balance(self):
+        aprMON_balance_in_wei, aprMON_balance, _ = await self.client.get_token_balance('aprMON')
+        balance = Decimal(str(aprMON_balance)).to_eng_string().replace('E', 'e')
+        logger.info(f'[{self.id}] [{self.client.address}] arpMON balance: {balance}')
+        return balance
+
     async def stake_mon(self):
         random_stake_amount = get_random_float_from_range(APRIORI_STAKE_RANGE)
         logger.info(f'[{self.id}] [{self.client.address}] random stake amount MON: {random_stake_amount}')
@@ -93,6 +99,15 @@ async def start_apriori(account, action):
                 write_result(result_text)
 
             await apriori.client.session.close()
+    
+        if action == 'balance':
+            logger.info(f'Start [{apriori.id}] account (balance checker)')
+            balance = await apriori.get_aprmon_balance()
+
+            result_text = f'{apriori.client.address} {apriori.private_key} APRIORI_STAKE_BALANCE {balance}\n'
+            write_result(result_text)
+
+            await apriori.client.session.close()
 
 
 async def start_accounts_for_apriori(accounts, action):
@@ -101,3 +116,4 @@ async def start_accounts_for_apriori(accounts, action):
         task.append(asyncio.create_task(start_apriori(account, action)))
 
     await asyncio.gather(*task)
+    logger.info('Apriori work completed')

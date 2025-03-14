@@ -21,6 +21,12 @@ class Kintsu:
         
         self.kintsu_contract = self.client.get_contract(KINTSU_CONTRACT, KINTSU_ABI)
 
+    async def get_smon_balance(self):
+        sMON_balance_in_wei, sMON_balance, _ = await self.client.get_token_balance('sMON')
+        balance = Decimal(str(sMON_balance)).to_eng_string().replace('E', 'e')
+        logger.info(f'[{self.id}] [{self.client.address}] sMON balance: {balance}')
+        return balance
+
     async def stake_mon(self):
         random_stake_amount = get_random_float_from_range(KINTSU_STAKE_RANGE)
         logger.info(f'[{self.id}] [{self.client.address}] random stake amount MON: {random_stake_amount}')
@@ -88,6 +94,16 @@ async def start_kintsu(account, action):
                 write_result(result_text)
 
             await kintsu.client.session.close()
+        
+        if action == 'balance':
+            logger.info(f'Start [{kintsu.id}] account (balance checker)')
+            balance = await kintsu.get_smon_balance()
+
+            result_text = f'{kintsu.client.address} {kintsu.private_key} KINTSU_STAKE_BALANCE {balance}\n'
+            write_result(result_text)
+
+            await kintsu.client.session.close()
+
 
 
 async def start_accounts_for_kintsu(accounts, action):
@@ -96,3 +112,4 @@ async def start_accounts_for_kintsu(accounts, action):
         task.append(asyncio.create_task(start_kintsu(account, action)))
 
     await asyncio.gather(*task)
+    logger.info('Kintsu work completed')

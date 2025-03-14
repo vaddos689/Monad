@@ -16,6 +16,10 @@ async def start(module: str):
         logger.info('Start Apriori stake module')
         await start_accounts_for_apriori(accounts, 'stake')
 
+    if module == 'apriori_balance':
+        logger.info('Start Apriori balance checker module')
+        await start_accounts_for_apriori(accounts, 'balance')
+
     if module == 'apriori_unstake':
         logger.info('Start Apriori unstake module')
         await start_accounts_for_apriori(accounts, 'unstake')
@@ -41,8 +45,12 @@ async def start(module: str):
         logger.info('Start Kintsu module')
         await start_accounts_for_kintsu(accounts, 'unstake')
 
+    if module == 'kintsu_balance':
+        logger.info('Start Kintsu module')
+        await start_accounts_for_kintsu(accounts, 'balance')
+
 if __name__ == '__main__':
-    action = int(input('\n1. Apriori Stake'
+    action = int(input('\n1. Apriori'
                         '\n2. AIcraft vote'
                         '\n3. Balance checker'
                         '\n4. Owlto'
@@ -51,12 +59,16 @@ if __name__ == '__main__':
     if action == 1:
         apriori_action = int(input('\n1. Stake MON'
                                    '\n2. Unstake MON'
+                                   '\n3. Get balance'
                                    '\nSelect Apriori action: '))
         if apriori_action == 1:
             asyncio.run(start('apriori_stake'))
 
         if apriori_action == 2:
             asyncio.run(start('apriori_unstake'))
+        
+        if apriori_action == 3:
+            asyncio.run(start('apriori_balance'))
 
     if action == 2:
         asyncio.run(start('aicraft'))
@@ -70,9 +82,13 @@ if __name__ == '__main__':
     if action == 5:
         kintsu_action = int(input('\n1. Stake MON'
                                    '\n2. Unstake MON'
+                                   '\n3. Get balance'
                                    '\nSelect Kintsu action: '))
         if kintsu_action == 1:
             asyncio.run(start('kintsu_stake'))
 
         if kintsu_action == 2:
             asyncio.run(start('kintsu_unstake'))
+
+        if kintsu_action == 3:
+            asyncio.run(start('kintsu_balance')) # TODO
